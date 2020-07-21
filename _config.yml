@@ -51,6 +51,8 @@ highlight:
   tab_replace: ''
   wrap: true
   hljs: false
+prismjs:
+  enable: false
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -93,7 +95,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: Nlvi
+theme: next #Nlvi
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
