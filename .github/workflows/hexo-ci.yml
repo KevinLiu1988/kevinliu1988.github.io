@@ -32,7 +32,7 @@ jobs:
         run: |
           npm install hexo-cli -g
           hexo clean
-          hexo g # generate statis files in public/
+          hexo g
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
