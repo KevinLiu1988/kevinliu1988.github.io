@@ -28,7 +28,7 @@ jobs:
           submodules: true
 
       - name: Setup Node.js environment 😈
-        uses: actions/setup-node@v1.1.0
+        uses: actions/setup-node@v2.1.2
         with:
           version: "12.x"
         
