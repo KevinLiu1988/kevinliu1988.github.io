@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lkv1988.github.io","root":"/","images":"/images","scheme":"Pisces","version":"8.0.2","exturl":false,"sidebar":{"position":"right","width":330,"display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="增量APT背景这是一个Gradle提供的特性，其在4.7版本后提供了对增量处理注解的支持。这个功能依赖Java的增量编译，否则也是不生效的。 正文Gradle通过“类别”Category来识别可以进行增量工作的注解处理器，可以支持两种类型：  isolating 隔离 aggregating 聚合  从注册说起正统的APT注册方式是在META-INF文件夹（src&#x2F;main&#x2F;resources&#x2F;M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20201123增量APT">
+<meta property="og:url" content="http://lkv1988.github.io/2020/11/25/20201123%E5%A2%9E%E9%87%8FAPT/index.html">
+<meta property="og:site_name" content="Kevin Liu&#39;s Blog">
+<meta property="og:description" content="增量APT背景这是一个Gradle提供的特性，其在4.7版本后提供了对增量处理注解的支持。这个功能依赖Java的增量编译，否则也是不生效的。 正文Gradle通过“类别”Category来识别可以进行增量工作的注解处理器，可以支持两种类型：  isolating 隔离 aggregating 聚合  从注册说起正统的APT注册方式是在META-INF文件夹（src&#x2F;main&#x2F;resources&#x2F;M">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-25T04:00:46.667Z">
+<meta property="article:modified_time" content="2020-11-25T04:00:46.667Z">
+<meta property="article:author" content="Kevin Liu">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://lkv1988.github.io/2020/11/25/20201123%E5%A2%9E%E9%87%8FAPT/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>20201123增量APT | Kevin Liu's Blog</title>
+  
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Kevin Liu's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep Moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#增量APT"><span class="nav-number">1.</span> <span class="nav-text">增量APT</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">1.2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从注册说起"><span class="nav-number">1.2.1.</span> <span class="nav-text">从注册说起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型选择"><span class="nav-number">1.2.2.</span> <span class="nav-text">类型选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需要遵守的规则"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">需要遵守的规则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#isolating"><span class="nav-number">1.2.3.</span> <span class="nav-text">isolating</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#aggregating"><span class="nav-number">1.2.4.</span> <span class="nav-text">aggregating</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Liu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lkv1988" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lkv1988" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:airk908@gmail.com" title="E-Mail → mailto:airk908@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lkv1988" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2020/11/25/20201123%E5%A2%9E%E9%87%8FAPT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Liu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin Liu's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          20201123增量APT
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-11-25 12:00:46" itemprop="dateCreated datePublished" datetime="2020-11-25T12:00:46+08:00">2020-11-25</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="增量APT"><a href="#增量APT" class="headerlink" title="增量APT"></a>增量APT</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>这是一个Gradle提供的特性，其在4.7版本后提供了对增量处理注解的支持。这个功能依赖Java的增量编译，否则也是不生效的。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>Gradle通过“类别”Category来识别可以进行增量工作的注解处理器，可以支持两种类型：</p>
+<ol>
+<li><code>isolating</code> 隔离</li>
+<li><code>aggregating</code> 聚合</li>
+</ol>
+<h3 id="从注册说起"><a href="#从注册说起" class="headerlink" title="从注册说起"></a>从注册说起</h3><p>正统的APT注册方式是在<code>META-INF</code>文件夹（<strong>src/main/resources/META-INF</strong>）下注册的：</p>
+<blockquote>
+<p>services目录下，创建<code>javax.annotation.processing.Processor</code>文本文件，其中写入自己Processor类的全称</p>
+</blockquote>
+<p>这是大家都知道的事情。Google的<code>auto</code>这个脚手架自动帮我们完成了这一点。</p>
+<p>但是对于需要支持增量工作的注解处理器来说，原有的注册方式要改动一下了：</p>
+<ul>
+<li><code>META-INF</code>目录不变，<code>services</code>目录改为<code>gradle</code>，即<code>META-INF/gradle/</code></li>
+<li>在<code>gradle</code>目录下创建的文本文件名为：<code>incremental.annotation.processors</code></li>
+</ul>
+<p>其中填写的文本内容格式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[注解处理器的类全称],[类型]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>中间必须是半角的逗号</p>
+</blockquote>
+<p>而类型这个数据在上边提到了两个，其实还有一个，是：<code>dynamic</code>。</p>
+<h3 id="类型选择"><a href="#类型选择" class="headerlink" title="类型选择"></a>类型选择</h3><p>如果你的处理器只能在运行时才能判断自己可不可以支持增量，那么就选择<code>dynamic</code>，然后在运行时，通过Processor类的<code>getSupportedOptions()</code>接口进行返回，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Set&lt;String&gt; <span class="title">getSupportedOptions</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Collections.singleton(<span class="string">"org.gradle.annotation.processing.aggregating"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样和在配置文件中写入<code>aggregating</code>是一个效果。（注意，这里返回的是数组，其中的字符串内容是包含了固定的gradle的包名内容）</p>
+<h4 id="需要遵守的规则"><a href="#需要遵守的规则" class="headerlink" title="需要遵守的规则"></a>需要遵守的规则</h4><p>想要让你的注解处理器支持增量的话，无非是两种类型。这个在上边说过了，而这两种类型，都会有一些限制，开发者必须遵守这些限制，那么才能顺利的支持增量编译：</p>
+<ol>
+<li><p>必须只能使用<code>Filer</code>API进行文件的生成，其他的方式可能会导致失败（如官方所言，是无声的失败），或者生成的文件不能被正确清除，可能污染最终的生成物</p>
+</li>
+<li><p>众所周知，在APT环节中有时为了直接操作、甚至干涉AST的数据结构，我们可能直接转化为其真正的实现者，即：<code>JavacProcessingEnvironment</code>，进而去操作<code>JCTree</code>等数据结构。但在实现上，Gradle是封装了一层Processor的API的，所以这样的强转行为可能导致失败，也就导致这个注解处理器不能支持增量编译。所以，需要开发者使用正统的接口API进行操作，而不要强转</p>
+</li>
+<li><p>对于资源的生成，只支持<code>Filer</code>API是自然，对于<code>createResource()</code>方法中的<code>location</code>参数来说，只能支持<code>StandardLocation</code>中的：</p>
+<ol>
+<li>CLASS_OUTPUT</li>
+<li>SOURCE_OUTPUT</li>
+<li>NATIVE_HEADER_OUTPUT</li>
+</ol>
+<p>其他的参数在增量编译中不支持</p>
+</li>
+</ol>
+<h3 id="isolating"><a href="#isolating" class="headerlink" title="isolating"></a>isolating</h3><p>最快的类型，这个类型把每一个注解节点视作一个独立的个体，他们互相不产生影响，每一个来了都能单独进行处理或者校验。它的限制是：</p>
+<ol>
+<li>不能依赖当前<code>RoundEnvironment</code>中的其他Element（非此Annotation的）做决策。所谓增量，就是每次编译的文件不是全量的，只是少部分，所以这里的输入是少的，只是必要的那些才会给你。如果开发者的处理器真的需要其他不相关的节点的话，那么需要声明成为<code>agregating</code>聚合类型</li>
+<li><code>Filer</code>API的createXXX接口会需要传入原始类型，JavaPoet项目中的TypeSpec.Builder也有相关API。对于这个接口来说，此类型只能提供一个参数，也就是只能而且必须只有一个原始类型。0或者更多都会导致重新编译所有源文件</li>
+</ol>
+<h3 id="aggregating"><a href="#aggregating" class="headerlink" title="aggregating"></a>aggregating</h3><p>如果需要聚合多个源码文件才能生成一个或多个的文件或者做校验工作，那么这种处理器就是聚合类型了。官方给出的例子是<code>ServiceRegistry</code>，这种场景下需要遍历多个文件然后最终产出一份注册表。结合此类型的限制，可以更好的理解：</p>
+<ol>
+<li>这种类型只能读取<code>CLASS</code>或者<code>RUNTIME</code>的注解</li>
+<li>对于参数的输入只能通过开发者传递<code>-parameters</code>编译参数</li>
+</ol>
+<p>结合以上，笔者认为，“聚合”类型的处理器是有可能接收到已经在上一次编译成为class文件的源码的（那么相对来说，isolating就不能接收到class文件，只会收到java源文件）。所谓“聚合”，就是结合之前可能存在的几轮APT操作后，混合着class和Java文件再作为后续的输入进行数据处理。所以，聚合类型有较大的资源获取权限来进行更大范围的处理。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然结合了大量参考资料的阅读和亲身测试，但笔者对“聚合”和“隔离”两个类型还是不能给出十分明确的代码层面的区分，这一点恐怕要在多处理器的环境下方可验证。后续如果有最新的进展我也会更新到此处。</p>
+<p>对于已有处理器，如何增加对增量编译的支持，这里简单做一个总结：</p>
+<ol>
+<li>首先，Gradle版本要在4.7之上</li>
+<li>APT支持增量的基础是Java的编译是支持的</li>
+<li>增量处理器要在<code>META-INF</code>下通过新的注册文件告知Gradle构建系统</li>
+<li>开发者需要按需扩大注解（@annotation）的生效范围，对于聚合来说，SOURCE就不够用了</li>
+<li>必须规范对AST的操作，实际上也就只能用只读的方式读取AST了，也就是用原生的接口API，否则将无法支持增量编译</li>
+<li>资源、源文件的生成只能通过<code>Filer</code>接口进行</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://docs.gradle.org/current/userguide/java_plugin.html#sec:incremental_annotation_processing" target="_blank" rel="noopener">https://docs.gradle.org/current/userguide/java_plugin.html#sec:incremental_annotation_processing</a></li>
+<li><a href="https://stackoverflow.com/questions/58966094/how-to-make-my-own-annotation-processor-incremental" target="_blank" rel="noopener">https://stackoverflow.com/questions/58966094/how-to-make-my-own-annotation-processor-incremental</a></li>
+<li><a href="https://github.com/google/auto/issues/615" target="_blank" rel="noopener">https://github.com/google/auto/issues/615</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/25/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/" rel="prev" title="深入理解Java注解处理器">
+                  <i class="fa fa-chevron-left"></i> 深入理解Java注解处理器
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Liu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+</body>
+</html>
