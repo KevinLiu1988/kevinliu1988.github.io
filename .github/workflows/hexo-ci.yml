@@ -24,13 +24,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Setup Node.js environment 😈
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v1.1.0
+        with:
+          version: "12.x"
         
       - name: Hexo Install and Build 🛠
         run: |
           npm install hexo-cli -g
+          npm install
           hexo clean
           hexo g
       - name: Deploy 🚀
@@ -38,6 +43,6 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: public # The folder the action should deploy.
+          FOLDER: ./public # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
           
