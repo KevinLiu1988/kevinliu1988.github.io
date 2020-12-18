@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lkv1988.github.io","root":"/","images":"/images","scheme":"Pisces","version":"8.0.2","exturl":false,"sidebar":{"position":"right","width":330,"display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="20201217客户端版本代码分支管理前言在使用Git作为代码版本管理工具的背景下，为了适应较快的迭代速度，降低代码冲突、覆盖等错误出现，以及提高协作效率，特此给出以下代码分支管理规范。 最佳实践这里简单列举一些Git操作中较好的最佳实践：  不要将巨量修改提交在一个commit中，不利于记录查询乃至回退。类似于“少食多餐”的思想，每一次功能修改、每一个问题修复、每一个独立的特性引入后都做一个独立">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20201217客户端版本代码分支管理">
+<meta property="og:url" content="http://lkv1988.github.io/2020/12/18/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Kevin Liu&#39;s Blog">
+<meta property="og:description" content="20201217客户端版本代码分支管理前言在使用Git作为代码版本管理工具的背景下，为了适应较快的迭代速度，降低代码冲突、覆盖等错误出现，以及提高协作效率，特此给出以下代码分支管理规范。 最佳实践这里简单列举一些Git操作中较好的最佳实践：  不要将巨量修改提交在一个commit中，不利于记录查询乃至回退。类似于“少食多餐”的思想，每一次功能修改、每一个问题修复、每一个独立的特性引入后都做一个独立">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog-imgs-1301146282.cos.ap-chengdu.myqcloud.com/20201217235309.png">
+<meta property="og:image" content="https://blog-imgs-1301146282.cos.ap-chengdu.myqcloud.com/20201218154356.png">
+<meta property="article:published_time" content="2020-12-18T08:23:05.862Z">
+<meta property="article:modified_time" content="2020-12-18T08:23:05.862Z">
+<meta property="article:author" content="Kevin Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog-imgs-1301146282.cos.ap-chengdu.myqcloud.com/20201217235309.png">
+
+
+<link rel="canonical" href="http://lkv1988.github.io/2020/12/18/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>20201217客户端版本代码分支管理 | Kevin Liu's Blog</title>
+  
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Kevin Liu's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Keep Moving</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#20201217客户端版本代码分支管理"><span class="nav-number">1.</span> <span class="nav-text">20201217客户端版本代码分支管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践"><span class="nav-number">1.2.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个Git操作准则（必须遵守）"><span class="nav-number">1.3.</span> <span class="nav-text">几个Git操作准则（必须遵守）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#合并-merge"><span class="nav-number">1.3.1.</span> <span class="nav-text">合并 merge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新-pull"><span class="nav-number">1.3.2.</span> <span class="nav-text">更新 pull</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冲突解决"><span class="nav-number">1.3.3.</span> <span class="nav-text">冲突解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#master不可被合并"><span class="nav-number">1.3.4.</span> <span class="nav-text">master不可被合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#永远不要force-push"><span class="nav-number">1.3.5.</span> <span class="nav-text">永远不要force push</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六种分支"><span class="nav-number">1.4.</span> <span class="nav-text">六种分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个Tag"><span class="nav-number">1.5.</span> <span class="nav-text">一个Tag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一张图"><span class="nav-number">1.6.</span> <span class="nav-text">一张图</span></a></li></ol></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Kevin Liu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lkv1988" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lkv1988" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:airk908@gmail.com" title="E-Mail → mailto:airk908@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/lkv1988" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2020/12/18/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Liu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin Liu's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          20201217客户端版本代码分支管理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-12-18 16:23:05" itemprop="dateCreated datePublished" datetime="2020-12-18T16:23:05+08:00">2020-12-18</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="20201217客户端版本代码分支管理"><a href="#20201217客户端版本代码分支管理" class="headerlink" title="20201217客户端版本代码分支管理"></a>20201217客户端版本代码分支管理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在使用Git作为代码版本管理工具的背景下，为了适应较快的迭代速度，降低代码冲突、覆盖等错误出现，以及提高协作效率，特此给出以下代码分支管理规范。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>这里简单列举一些Git操作中较好的最佳实践：</p>
+<ol>
+<li>不要将巨量修改提交在一个commit中，不利于记录查询乃至回退。类似于“少食多餐”的思想，每一次功能修改、每一个问题修复、每一个独立的特性引入后都做一个独立的commit进行提交</li>
+<li>使用<strong>命令行</strong>进行Git操作，工具会隐藏很多Git操作背后的细节。一方面不利于开发者理解Git，另一方面可能会夹带私货，携带预期外的参数或操作</li>
+<li>对于没有稳定预期的内容做单独分支进行管理，以避免污染主要开发分支</li>
+</ol>
+<h2 id="几个Git操作准则（必须遵守）"><a href="#几个Git操作准则（必须遵守）" class="headerlink" title="几个Git操作准则（必须遵守）"></a>几个Git操作准则（必须遵守）</h2><h3 id="合并-merge"><a href="#合并-merge" class="headerlink" title="合并 merge"></a>合并 merge</h3><p>做分支合并时，应使用非快进式合并（no fast forward）。如使用的是命令行，则应添加<code>--no-ff</code>参数，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-ff [from_branch]</span><br></pre></td></tr></table></figure>
+
+<p>通过IDE的VCS或其他GUI管理工具时，应注意选择：</p>
+<p><img src="https://blog-imgs-1301146282.cos.ap-chengdu.myqcloud.com/20201217235309.png" alt=""></p>
+<blockquote>
+<p>原因：使用快进式合并时会将新老分支的commit记录合并为一条线，而非快进式合并只会在两个分支的交汇点构造一个新的merge commit，其他commit的记录会依然存留在原有分支上。在查询代码提交的历史记录时这样的操作会使得操作者看的更加清晰。</p>
+</blockquote>
+<h3 id="更新-pull"><a href="#更新-pull" class="headerlink" title="更新 pull"></a>更新 pull</h3><p>通常更新代码只需要通过<code>git pull</code>即可，但这里给出的规范是需要加入<code>--rebase</code>参数，即更新代码时引入<strong>变基</strong>操作。<strong>变基</strong>是Git操作中较为复杂的概念，有兴趣的同学可以自行了解。在Git Pull操作中加入变基属性的大意是：认为远端的最新代码版本是本地代码的基础。</p>
+<p>这样的好处是，本地提交前永远会以远端为最新记录。换句话说，先提交者的代码版本会被认为是新的，而本地未提交的代码会被认为是旧的。若产生冲突，开发者需要在本地解决冲突后再进行提交。遵循冲突解决的规范后，将不会对远端代码产生覆盖。</p>
+<h3 id="冲突解决"><a href="#冲突解决" class="headerlink" title="冲突解决"></a>冲突解决</h3><p>当需要解决冲突时，必须仔细甄别每一个冲突节点，并主动联系相关开发者协同解决。切忌自行决定。</p>
+<blockquote>
+<p>因错误解决冲突造成的功能缺失、BUG甚至Crash等问题的开发者将承担相关事故责任。</p>
+</blockquote>
+<h3 id="master不可被合并"><a href="#master不可被合并" class="headerlink" title="master不可被合并"></a>master不可被合并</h3><p>即：任何分支不可以将<code>master</code>分支的内容合并过来，对于<code>master</code>分支来说，永远只是它接受其他分支的单向合并。</p>
+<h3 id="永远不要force-push"><a href="#永远不要force-push" class="headerlink" title="永远不要force push"></a>永远不要force push</h3><p>永远不要执行force push操作，这种操作在正常、规范的Git操作环境下不会用到。极特殊情况下，如果需要，请联系组长及协调各方，确认后再做执行。</p>
+<h2 id="六种分支"><a href="#六种分支" class="headerlink" title="六种分支"></a>六种分支</h2><p>固定分支：</p>
+<ul>
+<li><code>master</code> 分支，有且仅有一个。这个分支作为<strong>归档</strong>分支，归档已经发版的代码。不可进行手工提交，只可以接受来自<code>dev</code>分支的合并操作</li>
+<li><code>dev</code>或<code>develop</code>分，有且仅有一个。此分支为<strong>待发版</strong>分支，即此分支上的代码将在下一个即将发版的版本中集成上线。内容包括：新特性开发、老BUG修复等</li>
+</ul>
+<p>动态分支：</p>
+<p>假设下一个版本名为N，则：</p>
+<ul>
+<li><code>vN</code>分支<ul>
+<li>何时创建？在<code>N</code>版本<strong>投入开发</strong>时，此分支由<code>dev</code>衍生，用于开发<code>N</code>版本上的需求</li>
+<li>开发过程中：应不停从<code>dev</code>合并代码过来（若<code>dev</code>有更新，此时的更新代码多为线上问题修复）。此合并操作由每一位在此分支上开发的开发者主动进行</li>
+<li>何时合并？当此分支对应的版本<strong>提测</strong>后，此分支需要合并回去<code>dev</code>分支</li>
+</ul>
+</li>
+<li><code>vN+1</code>分支<ul>
+<li>何时创建？当<code>N+1</code>版本<strong>投入开发</strong>时，若此版本不依赖上一个版本，则由由<code>dev</code>分支衍生而来；若依赖<code>N</code>版本上的开发内容，则由<code>vN</code>分支衍生而来。<code>dev</code>或<code>vN</code>分支称为其<strong>父分支</strong>，当<code>vN</code>提测后，则<code>dev</code>为其<strong>父分支</strong></li>
+<li>开发过程中：同样的，应由相关开发者主动的从<strong>父分支</strong>合并代码过来，以保持更新</li>
+<li>何时合并？当此分支对应的版本<strong>提测</strong>后，此分支需要合并回其<strong>父分支</strong></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>PS：当<code>vN</code>分支已经提测后，意义上<code>vN+1</code>此时也就变成了<code>vN</code>分支。</p>
+</blockquote>
+<p>以上两个分支用来在可能产生穿插开发的背景下起到协同作用。</p>
+<p>特殊分支：</p>
+<ul>
+<li><code>feat_X</code>或<code>feature_X</code>分支，用于承载<strong>不确定</strong>发布版本或<strong>风险较高</strong>的需求开发内容<ul>
+<li>何时创建？确定相关需求<strong>投入开发</strong>时，选择<strong>合适的父分支</strong>进行衍生创建</li>
+<li>如何更新？开发过程中，应由相关开发者主动合并<strong>父分支</strong>内容过来，以保持更新</li>
+<li>何时合并？当此分支对应需求<strong>进入提测状态</strong>，并已经确定发版版本后，此分支合入<strong>对应版本分支</strong></li>
+</ul>
+</li>
+<li><code>hotpatch_vX</code>分支，用于在版本发布后发现问题时修复线上问题使用，即：用于发布hotpatch或增发版本。此分支由releaseTag或<code>master</code>分支衍生，其衍生节点<strong>必须</strong>与对应版本的最终提交节点完全一致。问题修复后，<code>dev/develop</code>分支应使用<code>cherry-pick</code>方式将相关调整内容同步回来（<strong>禁止</strong>将<code>master</code>分支合并回<code>dev/develop</code>分支）</li>
+</ul>
+<h2 id="一个Tag"><a href="#一个Tag" class="headerlink" title="一个Tag"></a>一个Tag</h2><p>在每次发版后，由对应的发版打包负责人在此版本的最后一次<code>master</code>合并节点上打一个新的Git Tag，命名规范为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">release_v[Version]</span><br></pre></td></tr></table></figure>
+
+<p>作用：此Tag可以用于历史版本代码的精准留存。如，需要打出某个历史版本的线下测试包时。</p>
+<h2 id="一张图"><a href="#一张图" class="headerlink" title="一张图"></a>一张图</h2><p><img src="https://blog-imgs-1301146282.cos.ap-chengdu.myqcloud.com/20201218154356.png" alt=""></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/12/18/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/" rel="prev" title="深入理解Java注解处理器">
+                  <i class="fa fa-chevron-left"></i> 深入理解Java注解处理器
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/12/18/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/" rel="next" title="20201208 Android Gradle Plugin迎来7.X版本">
+                  20201208 Android Gradle Plugin迎来7.X版本 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kevin Liu</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+</body>
+</html>
