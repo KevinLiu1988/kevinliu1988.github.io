@@ -155,7 +155,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/04/20/20201123%E5%A2%9E%E9%87%8FAPT/">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/06/30/20200600%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -217,7 +217,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/20/20201123%E5%A2%9E%E9%87%8FAPT/" class="post-title-link" itemprop="url">20201123增量APT</a>
+          <a href="/2021/06/30/20200600%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/" class="post-title-link" itemprop="url">20200600深入理解Java注解处理器</a>
         </h2>
 
         <div class="post-meta-container">
@@ -228,7 +228,83 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-04-20 14:24:06" itemprop="dateCreated datePublished" datetime="2021-04-20T14:24:06+08:00">2021-04-20</time>
+      <time title="创建时间：2021-06-30 11:21:05" itemprop="dateCreated datePublished" datetime="2021-06-30T11:21:05+08:00">2021-06-30</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>Annotation Processing Tool（APT），即Java注解处理器，是JavaX包中提供的工具。Android中并不具备此包，所以在Gradle工程中的体现形式为<code>java-library</code>。大名鼎鼎的ButterKnife就基于此工具而成，常用于自动生成具备一定规律的机械化代码。善加利用，可以在大型工程协作中发挥巨大的作用，从没有灵魂的代码中解放我们的双手，把每一份可贵的精力都放在更富有创造力的地方。</p>
+<p>在ButterKnife横空出世后，APT（Annotation Processing Tool）对于Android开发者来说早已不陌生。因其可以自动生成机械化代码的特性，各类基于此的工具也层出不穷。本文会详细拆解APT周边的众多API以及深入探讨此机制背后的设计思想与逻辑，让读者对APT的理解更深一层，从而更加活学活用。</p>
+<h2 id="二、基础夯实"><a href="#二、基础夯实" class="headerlink" title="二、基础夯实"></a>二、基础夯实</h2><h3 id="说在前面"><a href="#说在前面" class="headerlink" title="说在前面"></a>说在前面</h3><p>当我们面对APT时，需要将脑子换一换。</p>
+<p>平日里，我们是在面向runtime编程。而在面对APT时，实际面对的是编译时compile-time。此时此刻，我们所书写的代码还在编译成Class的途中，对他们的反射用法在这个环节是没什么用武之地的，代码以另外的AST格式存在于这个环节。相对应的，如果要操作它们就需要新的一套API。现在，像张无忌忘掉乾坤大挪移，重新学习太极拳一样，请大家换个脑子，面对新的领域。</p>
+<h3 id="注解是什么"><a href="#注解是什么" class="headerlink" title="注解是什么"></a>注解是什么</h3><p>如<code>@Nullable</code>这种带<code>@</code>符号的叫做注解。</p>
+<p>定义注解很简单：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/06/30/20200600%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/06/30/20201123%E5%A2%9E%E9%87%8FAPT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Kevin Liu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin Liu's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/06/30/20201123%E5%A2%9E%E9%87%8FAPT/" class="post-title-link" itemprop="url">20201123增量APT</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-06-30 11:21:05" itemprop="dateCreated datePublished" datetime="2021-06-30T11:21:05+08:00">2021-06-30</time>
     </span>
 
   
@@ -254,7 +330,7 @@
 <p>这是大家都知道的事情。Google的<code>auto</code>这个脚手架自动帮我们完成了这一点。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/20/20201123%E5%A2%9E%E9%87%8FAPT/#more" rel="contents">
+              <a class="btn" href="/2021/06/30/20201123%E5%A2%9E%E9%87%8FAPT/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -285,7 +361,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/04/20/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/06/30/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -298,7 +374,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/20/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">20201208 Android Gradle Plugin迎来7.X版本</a>
+          <a href="/2021/06/30/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/" class="post-title-link" itemprop="url">20201208 Android Gradle Plugin迎来7.X版本</a>
         </h2>
 
         <div class="post-meta-container">
@@ -309,7 +385,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-04-20 14:24:06" itemprop="dateCreated datePublished" datetime="2021-04-20T14:24:06+08:00">2021-04-20</time>
+      <time title="创建时间：2021-06-30 11:21:05" itemprop="dateCreated datePublished" datetime="2021-06-30T11:21:05+08:00">2021-06-30</time>
     </span>
 
   
@@ -333,7 +409,7 @@
 <h3 id="需要Java11"><a href="#需要Java11" class="headerlink" title="需要Java11"></a>需要Java11</h3>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/20/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/#more" rel="contents">
+              <a class="btn" href="/2021/06/30/20201208%20Android%20Gradle%20Plugin%E8%BF%8E%E6%9D%A57.X%E7%89%88%E6%9C%AC/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -364,7 +440,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/04/20/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/06/30/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -377,7 +453,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/20/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">20201217客户端版本代码分支管理</a>
+          <a href="/2021/06/30/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">20201217客户端版本代码分支管理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -388,7 +464,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-04-20 14:24:06" itemprop="dateCreated datePublished" datetime="2021-04-20T14:24:06+08:00">2021-04-20</time>
+      <time title="创建时间：2021-06-30 11:21:05" itemprop="dateCreated datePublished" datetime="2021-06-30T11:21:05+08:00">2021-06-30</time>
     </span>
 
   
@@ -412,7 +488,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge --no-ff [from_branch]</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/20/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/#more" rel="contents">
+              <a class="btn" href="/2021/06/30/20201217%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%89%88%E6%9C%AC%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -443,7 +519,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/04/20/20201220%20Jetpack%20Startup%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1/">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/06/30/20201220%20Jetpack%20Startup%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -456,7 +532,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/20/20201220%20Jetpack%20Startup%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1/" class="post-title-link" itemprop="url">20201220 Jetpack Startup快速掌握</a>
+          <a href="/2021/06/30/20201220%20Jetpack%20Startup%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1/" class="post-title-link" itemprop="url">20201220 Jetpack Startup快速掌握</a>
         </h2>
 
         <div class="post-meta-container">
@@ -467,7 +543,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-04-20 14:24:06" itemprop="dateCreated datePublished" datetime="2021-04-20T14:24:06+08:00">2021-04-20</time>
+      <time title="创建时间：2021-06-30 11:21:05" itemprop="dateCreated datePublished" datetime="2021-06-30T11:21:05+08:00">2021-06-30</time>
     </span>
 
   
@@ -491,7 +567,7 @@
 <p>并实现两个方法：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/20/20201220%20Jetpack%20Startup%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1/#more" rel="contents">
+              <a class="btn" href="/2021/06/30/20201220%20Jetpack%20Startup%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -522,7 +598,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/04/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="http://lkv1988.github.io/2021/06/30/20210630DartVM%E4%BB%8B%E7%BB%8D-DartVM%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -535,7 +611,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/" class="post-title-link" itemprop="url">深入理解Java注解处理器</a>
+          <a href="/2021/06/30/20210630DartVM%E4%BB%8B%E7%BB%8D-DartVM%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">20210630DartVM介绍-DartVM如何执行你的代码</a>
         </h2>
 
         <div class="post-meta-container">
@@ -546,7 +622,7 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-04-20 14:24:06" itemprop="dateCreated datePublished" datetime="2021-04-20T14:24:06+08:00">2021-04-20</time>
+      <time title="创建时间：2021-06-30 11:21:05" itemprop="dateCreated datePublished" datetime="2021-06-30T11:21:05+08:00">2021-06-30</time>
     </span>
 
   
@@ -559,15 +635,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>Annotation Processing Tool（APT），即Java注解处理器，是JavaX包中提供的工具。Android中并不具备此包，所以在Gradle工程中的体现形式为<code>java-library</code>。大名鼎鼎的ButterKnife就基于此工具而成，常用于自动生成具备一定规律的机械化代码。善加利用，可以在大型工程协作中发挥巨大的作用，从没有灵魂的代码中解放我们的双手，把每一份可贵的精力都放在更富有创造力的地方。</p>
-<p>在ButterKnife横空出世后，APT（Annotation Processing Tool）对于Android开发者来说早已不陌生。因其可以自动生成机械化代码的特性，各类基于此的工具也层出不穷。本文会详细拆解APT周边的众多API以及深入探讨此机制背后的设计思想与逻辑，让读者对APT的理解更深一层，从而更加活学活用。</p>
-<h2 id="二、基础夯实"><a href="#二、基础夯实" class="headerlink" title="二、基础夯实"></a>二、基础夯实</h2><h3 id="说在前面"><a href="#说在前面" class="headerlink" title="说在前面"></a>说在前面</h3><p>当我们面对APT时，需要将脑子换一换。</p>
-<p>平日里，我们是在面向runtime编程。而在面对APT时，实际面对的是编译时compile-time。此时此刻，我们所书写的代码还在编译成Class的途中，对他们的反射用法在这个环节是没什么用武之地的，代码以另外的AST格式存在于这个环节。相对应的，如果要操作它们就需要新的一套API。现在，像张无忌忘掉乾坤大挪移，重新学习太极拳一样，请大家换个脑子，面对新的领域。</p>
-<h3 id="注解是什么"><a href="#注解是什么" class="headerlink" title="注解是什么"></a>注解是什么</h3><p>如<code>@Nullable</code>这种带<code>@</code>符号的叫做注解。</p>
-<p>定义注解很简单：</p>
+          <h1 id="DartVM介绍"><a href="#DartVM介绍" class="headerlink" title="DartVM介绍"></a>DartVM介绍</h1><blockquote>
+<p>原文地址：<a href="https://mrale.ph/dartvm/" target="_blank" rel="noopener">https://mrale.ph/dartvm/</a></p>
+</blockquote>
+<blockquote>
+<p>此文的书写目的</p>
+<p>此文章用来作为DartVM团队新成员、潜在的外部贡献者或仅仅是对VM内部有兴趣的任何人提供参考。本文对DartVM进行了高度的概括，并对各种内部组件的细节进行了一些描述。</p>
+</blockquote>
+<p>DartVM是用于在原生环境执行Dart代码的一系列组件的集合。其主要包含了一下内容：</p>
+<ul>
+<li>运行时系统<ul>
+<li>对象模型</li>
+<li>垃圾回收</li>
+<li>快照</li>
+</ul>
+</li>
+<li>核心库的native方法</li>
+<li>通过服务协议形成的众多开发体验组件，如调试、性能测量、热加载</li>
+<li>JIT和AOT编译管线</li>
+<li>解释器</li>
+<li>ARM模拟器</li>
+</ul>
+<p>“Dart VM”是一个历史命名。Dart VM是一个为高级编程语言提供运行环境的虚拟机，然而Dart并不总是解释型或者说是JIT编译的。比如说，在使用通过AOT编译管线Dart代码将会被编译为机器码，然后运行在一个阉割版本的DartVM中，这个DartVM叫做预编译运行时，这个运行时中并不包含用来动态运行Dart源码的编译组件。</p>
+<blockquote>
+<p>译者注</p>
+<p>第一句话稍显诡异，我妄加揣测是作者想要说Dart的运行时环境与以往的VM有所不同，其在不同的环境中有着不一样的效率和目标，而不要一概而论的理解成为虚拟机的效能就会偏低，DartVM也是可以直接执行机器码的。</p>
+</blockquote>
+<h2 id="DartVM如何运行你的代码？"><a href="#DartVM如何运行你的代码？" class="headerlink" title="DartVM如何运行你的代码？"></a>DartVM如何运行你的代码？</h2><p>Dart VM有很多种方式运行代码，比如：</p>
+<ul>
+<li>用JIT模式运行源码或者是内核二进制文件（kernel binary）</li>
+<li>运行快照（AOT和AppJIT）</li>
+</ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/20/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/#more" rel="contents">
+              <a class="btn" href="/2021/06/30/20210630DartVM%E4%BB%8B%E7%BB%8D-DartVM%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
